@@ -1,0 +1,15 @@
+{
+  "train_rows": 43147,
+  "validation_rows": 4853,
+  "mae": 129.76,
+  "rmse": 652.37,
+  "train_date_range": [
+    "2025-01-01",
+    "2025-09-30"
+  ],
+  "validation_date_range": [
+    "2025-10-01",
+    "2025-10-31"
+  ],
+  "model": "HistGradientBoostingRegressor"
+}
