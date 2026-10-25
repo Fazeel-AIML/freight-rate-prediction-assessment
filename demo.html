@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A small interactive preview of a freight rate prediction dashboard."
+    />
+    <title>Freight rate estimator demo</title>
+    <link rel="stylesheet" href="demo.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="Freightwise home">
+          <span class="brand-mark" aria-hidden="true">F</span>
+          <span>freightwise</span>
+        </a>
+        <span class="demo-tag"><span class="status-dot"></span> DEMO PREVIEW</span>
+      </header>
+
+      <section class="intro">
+        <p class="eyebrow">FREIGHT RATE INTELLIGENCE</p>
+        <h1>Know your rate.<br /><span>Move with confidence.</span></h1>
+        <p class="intro-copy">
+          Build a quick quote for your next shipment. Adjust the details to see
+          how a sample estimate responds.
+        </p>
+      </section>
+
+      <section class="workspace" aria-label="Freight rate estimate">
+        <form class="quote-card" id="quote-form">
+          <div class="card-heading">
+            <div>
+              <p class="eyebrow">NEW QUOTE</p>
+              <h2>Shipment details</h2>
+            </div>
+            <span class="step-badge">01 <span>/ 01</span></span>
+          </div>
+
+          <div class="route-fields">
+            <label class="field">
+              <span>Pickup city</span>
+              <select id="pickup" name="pickup">
+                <option>Chicago, IL</option>
+                <option>Atlanta, GA</option>
+                <option>Dallas, TX</option>
+                <option>Los Angeles, CA</option>
+                <option>New York, NY</option>
+              </select>
+            </label>
+            <div class="route-connector" aria-hidden="true">
+              <span></span>
+              <span></span>
+            </div>
+            <label class="field">
+              <span>Delivery city</span>
+              <select id="delivery" name="delivery">
+                <option>Atlanta, GA</option>
+                <option>Chicago, IL</option>
+                <option>Dallas, TX</option>
+                <option>Los Angeles, CA</option>
+                <option>New York, NY</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="field-grid">
+            <label class="field">
+              <span>Equipment</span>
+              <select id="equipment" name="equipment">
+                <option value="dry">Dry Van</option>
+                <option value="reefer">Reefer</option>
+                <option value="flatbed">Flatbed</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Load weight <small>lbs</small></span>
+              <input id="weight" name="weight" type="number" min="1" value="28000" required />
+            </label>
+            <label class="field">
+              <span>Distance <small>miles</small></span>
+              <input id="distance" name="distance" type="number" min="1" value="715" required />
+            </label>
+            <label class="field">
+              <span>Pickup date</span>
+              <input id="date" name="date" type="date" value="2025-10-25" required />
+            </label>
+          </div>
+
+          <button class="submit-button" type="submit">
+            Calculate sample rate <span aria-hidden="true">↗</span>
+          </button>
+          <p class="form-note">A quick illustration for the demo interface.</p>
+        </form>
+
+        <aside class="result-card" aria-live="polite" aria-atomic="true">
+          <div class="result-topline">
+            <span class="result-icon" aria-hidden="true">↗</span>
+            <span>YOUR SAMPLE ESTIMATE</span>
+          </div>
+          <p class="rate-label">Estimated spot rate</p>
+          <p class="rate" id="rate">$1,185<span>.00</span></p>
+          <p class="rate-caption">USD per load <span class="separator">·</span> All-in</p>
+
+          <div class="result-divider"></div>
+          <div class="summary-line">
+            <span>Lane</span>
+            <strong id="lane">Chicago, IL <span>→</span> Atlanta, GA</strong>
+          </div>
+          <div class="summary-line">
+            <span>Equipment</span>
+            <strong id="equipment-summary">Dry Van</strong>
+          </div>
+          <div class="summary-line">
+            <span>Transit estimate</span>
+            <strong id="transit">2–3 days</strong>
+          </div>
+
+          <p class="disclaimer">
+            Demo only. This illustrative calculation is not produced by the
+            trained prediction model.
+          </p>
+        </aside>
+      </section>
+
+      <footer class="page-footer">
+        <span>FREIGHT RATE PREDICTION</span>
+        <span>MODEL PERFORMANCE <strong>MAE $129.76</strong></span>
+      </footer>
+    </main>
+
+    <script>
+      const form = document.querySelector("#quote-form");
+      const equipmentNames = {
+        dry: "Dry Van",
+        reefer: "Reefer",
+        flatbed: "Flatbed",
+      };
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const distance = Number(document.querySelector("#distance").value);
+        const weight = Number(document.querySelector("#weight").value);
+        const equipment = document.querySelector("#equipment").value;
+        const premium = { dry: 0, reefer: 180, flatbed: 120 }[equipment];
+        const estimate = 350 + distance * 0.9 + (weight / 1000) * 4 + premium;
+        const pickup = document.querySelector("#pickup").value;
+        const delivery = document.querySelector("#delivery").value;
+
+        document.querySelector("#rate").innerHTML =
+          `$${estimate.toLocaleString("en-US", { maximumFractionDigits: 0 })}` +
+          "<span>.00</span>";
+        document.querySelector("#lane").innerHTML =
+          `${pickup} <span>→</span> ${delivery}`;
+        document.querySelector("#equipment-summary").textContent =
+          equipmentNames[equipment];
+        document.querySelector("#transit").textContent =
+          distance > 1000 ? "3–5 days" : distance > 500 ? "2–3 days" : "1–2 days";
+      });
+    </script>
+  </body>
+</html>
