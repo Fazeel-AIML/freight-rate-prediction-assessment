@@ -157,7 +157,6 @@ def main() -> None:
     print("Validated 31 fixed December predictions.")
     print(f"Created chart: {chart}")
     print("Final validation metrics are calculated by Spotter after submission.")
-
-
+    print("Abubakar Changed Something here")
 if __name__ == "__main__":
     main()
